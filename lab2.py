@@ -1,15 +1,44 @@
-import time
-start = time.time()                 # запускаем таймер
-with open('numbers.txt', 'r') as f: # открываем файл
-    data = f.read().split()         # считываем каждый строчный символ в файле
-    s = ''
-    for i in data:
-        if int(i) % 2 == 0:         # находим четное число
-            if len(set(list(i))) == len(i): # проверяем нет ли в i повторяющихся цифр
-                s += i              #
-            else:
-                s += ''.join(sorted(set(list(i)), key=i.index)) # убираем повторяющие цифры из числа
-            s += ' '                #
-    finish = time.time()
-    result = finish - start         # отключаем таймер
-    print(s, "Program time: " + str(result) + " seconds.") # выводим результат программы
+import itertools
+
+more_max_buffer_len = False                 # максимальный размер рабочего буфера
+max_buffer_len = 100                        # максимальный размер рабочего буфера
+buffer_len = 1                              # размер буфера чтения
+work_buffer = ""                            # рабочий буфер
+
+try:
+    with open("text.txt", "r") as file:                    # открываем файл
+        print("\n-----Результат работы программы-----\n")  # читаем первый блок
+        buffer = file.read(buffer_len)
+
+        if not buffer:                                     # если файл пустой
+            print("\nФайл text.txt в директории проекта пустой.\nДобавьте не пустой файл в директорию или переименуйте существующий *.txt файл.")
+
+        while buffer:                                      # пока файл не пустой
+            buffer = file.readlines(buffer_len)            # читаем очередной блок
+            buffer = list(itertools.chain(*[num.split() for num in buffer]))
+            if not buffer:
+                break
+
+            for num in buffer:                              # обрабатываем числа
+                if int(num) % 2 == 0:                       # находим четное число
+                    unique_num = list(set(list(num)))
+
+                    work_buffer = ""
+                    for i in num:
+                        if i in unique_num:
+                            work_buffer += i
+                            unique_num.remove(i)
+
+                    print(work_buffer)
+                else:
+                    print(num)
+
+            if len(work_buffer) >= max_buffer_len:           # Если буфер переполнен и в нем нет цифр
+                print("\nФайл text.txt содержит блок цифр, превышающий максимальный размер буфера = " + str(max_buffer_len) + " символов.\nОткорректируйте файл text.txt в директории или переименуйте существующий *.txt файл.")
+                more_max_buffer_len = True
+
+            if more_max_buffer_len:
+                break
+
+except FileNotFoundError:
+    print("\nФайл text.txt в директории проекта не обнаружен.\nДобавьте файл в директорию или переименуйте существующий *.txt файл.")
