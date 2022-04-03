@@ -1,43 +1,43 @@
-import itertools
 
-more_max_buffer_len = False                 # максимальный размер рабочего буфера
-max_buffer_len = 100                        # максимальный размер рабочего буфера
-buffer_len = 1                              # размер буфера чтения
-work_buffer = ""                            # рабочий буфер
+buffer_len = 1          # размер буфера чтения
 
 try:
-    with open("text.txt", "r") as file:                    # открываем файл
-        print("\n-----Результат работы программы-----\n")  # читаем первый блок
-        buffer = file.read(buffer_len)
+    with open('text.txt', 'r') as file:   # открываем файл
+        print("\n-----Результат работы программы-----\n")
 
-        if not buffer:                                     # если файл пустой
-            print("\nФайл text.txt в директории проекта пустой.\nДобавьте не пустой файл в директорию или переименуйте существующий *.txt файл.")
+        while True:      # бесконечный цикл для чтения символов из файла
 
-        while buffer:                                      # пока файл не пустой
-            buffer = file.readlines(buffer_len)            # читаем очередной блок
-            buffer = list(itertools.chain(*[num.split() for num in buffer]))
-            if not buffer:
-                break
+            char = None  # переменная символа
+            number = ""  # переменная числа
 
-            for num in buffer:                              # обрабатываем числа
-                if int(num) % 2 == 0:                       # находим четное число
-                    unique_num = list(set(list(num)))
+            while True:     # цикл для получения числа из посимволного чтения
+                char = file.read(buffer_len)    # читаем блок
 
-                    work_buffer = ""
-                    for i in num:
-                        if i in unique_num:
-                            work_buffer += i
-                            unique_num.remove(i)
+                if char == '':  # проверяем конец файла
+                    break
+                elif char == " ":
+                    break
+                elif char == "\n":
+                    break
+                number += char          # складываем в переменную символ
 
-                    print(work_buffer)
-                else:
-                    print(num)
+            if int(number) % 2 == 0:    # проверяем число четное
 
-            if len(work_buffer) >= max_buffer_len:           # Если буфер переполнен и в нем нет цифр
-                print("\nФайл text.txt содержит блок цифр, превышающий максимальный размер буфера = " + str(max_buffer_len) + " символов.\nОткорректируйте файл text.txt в директории или переименуйте существующий *.txt файл.")
-                more_max_buffer_len = True
+                unique_num = list(set(list(number)))   # получаем список уникальных цифр числа
+                new_num = ""                           # переменная новая число после удаления повторных цифр
 
-            if more_max_buffer_len:
+                for n in number:    # проходимся по всем цифрам числа
+
+                    if n in unique_num:        # если цифра есть в списке уникальных цифр числа
+
+                        new_num += n           # добавляем цифру в новое число
+                        unique_num.remove(n)   # удалем из списка уникальных цифр числа
+
+                print(new_num)
+            else:
+                print(number)
+
+            if char == '':  # проверка конец ли это файла
                 break
 
 except FileNotFoundError:
