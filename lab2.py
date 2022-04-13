@@ -21,21 +21,23 @@ try:
                     break
                 number += char          # складываем в переменную символ
 
-            if int(number) % 2 == 0:    # проверяем число четное
+            if number.isdigit():
 
-                unique_num = list(set(list(number)))   # получаем список уникальных цифр числа
-                new_num = ""                           # переменная новая число после удаления повторных цифр
+                if int(number) % 2 == 0:    # проверяем число четное
 
-                for n in number:    # проходимся по всем цифрам числа
+                    unique_num = list(set(list(number)))   # получаем список уникальных цифр числа
+                    new_num = ""                           # переменная новая число после удаления повторных цифр
 
-                    if n in unique_num:        # если цифра есть в списке уникальных цифр числа
+                    for n in number:    # проходимся по всем цифрам числа
 
-                        new_num += n           # добавляем цифру в новое число
-                        unique_num.remove(n)   # удалем из списка уникальных цифр числа
+                        if n in unique_num:        # если цифра есть в списке уникальных цифр числа
 
-                print(new_num)
-            else:
-                print(number)
+                            new_num += n           # добавляем цифру в новое число
+                            unique_num.remove(n)   # удалем из списка уникальных цифр числа
+
+                    print(new_num)
+                else:
+                    print(number)
 
             if char == '':  # проверка конец ли это файла
                 break
