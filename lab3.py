@@ -1,60 +1,44 @@
-import cProfile
 import time
 
-buffer_len = 1          # размер буфера чтения
+buffer_len = 1  # Размер буфера чтения
+s = []  # Массив в котором будут храниться числа
 
-def task():
-    try:
-        start = time.time()  # запускаем таймер
-        with open('text.txt', 'r') as file:   # открываем файл
-            print("\n-----Результат работы программы-----\n")
+try:
+    start = time.time()  # Запускаем таймер
+    with open("text.txt", "r") as file:  # Открываем файл
+        print("\n-----Результат работы программы-----\n")
+        buffer = file.read(buffer_len)  # Читаем первый блок
 
-            while True:      # бесконечный цикл для чтения символов из файла
+        if not buffer:  # Если файл пустой
+            print("\nФайл text.txt в директории проекта пустой.\nДобавьте не пустой файл в директорию или переименуйте существующий *.txt файл.")
 
-                char = None  # переменная символа
-                number = ""  # переменная числа
+        while buffer:  # Пока файл не пустой
 
-                while True:     # цикл для получения числа из посимволного чтения
-                    char = file.read(buffer_len)    # читаем блок
+            while (buffer < '0' or buffer > '9') and buffer != '.' and buffer:  # Ищем начало числа
+                buffer = file.read(buffer_len)  # Читаем очередной блок
 
-                    if char == '':  # проверяем конец файла
-                        break
-                    elif char == " ":
-                        break
-                    elif char == "\n":
-                        break
-                    number += char          # складываем в переменную символ
+            while (buffer >= '0' and buffer <= '9') or buffer == '.' and buffer:  # Обрабатываем число
+                s.append(buffer)
+                buffer = file.read(buffer_len)  # Читаем очередной блок
+                s == []
 
-                if number.isdigit():
-
-                    if int(number) % 2 == 0:    # проверяем число четное
-
-                        unique_num = list(set(list(number)))   # получаем список уникальных цифр числа
-                        new_num = ""                           # переменная новая число после удаления повторных цифр
-
-                        for n in number:    # проходимся по всем цифрам числа
-
-                            if n in unique_num:        # если цифра есть в списке уникальных цифр числа
-
-                                new_num += n           # добавляем цифру в новое число
-                                unique_num.remove(n)   # удалем из списка уникальных цифр числа
-
-                        print(new_num)
+            if s != []:
+                temp = ''.join(s)
+                try:
+                    if int(temp) % 2 == 0:  # Проверяем число четное
+                        temp2 = ''
+                        for j in temp:
+                            if temp2.find(j) == -1:
+                                temp2 = temp2 + j
+                        print(temp2)
                     else:
-                        print(number)
+                        print(temp)
+                except:
+                    print(temp)
+            s = []
+    finish = time.time()
+    result = finish - start  # Отключаем таймер
+    print("Program time: " + str(result) + " seconds.")
 
-                if char == '':  # проверка конец ли это файла
-                    break
-
-                finish = time.time()
-                result = finish - start  # отключаем таймер
-            print("Program time: " + str(result) + " seconds.")
-
-    except FileNotFoundError:
-        print("\nФайл text.txt в директории проекта не обнаружен.\nДобавьте файл в директорию или переименуйте существующий *.txt файл.")
-        
-def main():
-    task()
-
-if __name__ == '__main__':
-    cProfile.run('main()')
+except FileNotFoundError:
+    print("\nФайл text.txt в директории проекта не обнаружен.\nДобавьте файл в директорию или переименуйте существующий *.txt файл.")
